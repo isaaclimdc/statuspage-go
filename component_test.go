@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	statuspage "github.com/nagelflorian/statuspage-go"
+	statuspage "github.com/andrewwatson/statuspage-go"
 )
 
 func TestComponent_marshall(t *testing.T) {

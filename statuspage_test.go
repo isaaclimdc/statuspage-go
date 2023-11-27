@@ -14,13 +14,13 @@ import (
 	"testing"
 	"time"
 
-	statuspage "github.com/nagelflorian/statuspage-go"
+	statuspage "github.com/andrewwatson/statuspage-go"
 )
 
 var referenceTime = time.Date(2006, time.January, 02, 15, 04, 05, 0, time.UTC)
 
 var integration = flag.Bool("integration", false, "enable integration testing")
-var offline = flag.Bool("offline", true, "run offline tests")
+// var offline = flag.Bool("offline", true, "run offline tests")
 
 const (
 	// baseURLPath is a non-empty Client.BaseURL path to use during tests,
