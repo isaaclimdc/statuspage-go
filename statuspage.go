@@ -29,6 +29,7 @@ type Client struct {
 	// Services used for talking to different parts of the Statuspage API.
 	Page      *PageService
 	Component *ComponentService
+	Group     *GroupService
 }
 
 type service struct {
@@ -60,9 +61,9 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 }
 
 func (c *Client) do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
-	req.WithContext(ctx)
+	newReq := req.WithContext(ctx)
 
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.httpClient.Do(newReq)
 	if err != nil {
 		// If we got an error, and the context has been canceled,
 		// the context's error is probably more useful.
@@ -112,7 +113,7 @@ func NewClient(token string, httpClient *http.Client) *Client {
 
 	c := &Client{
 		BaseURL:    baseURL,
-		httpClient: http.DefaultClient,
+		httpClient: httpClient,
 		Token:      token,
 		Version:    version,
 	}
@@ -120,6 +121,7 @@ func NewClient(token string, httpClient *http.Client) *Client {
 	c.common.client = c
 	c.Page = (*PageService)(&c.common)
 	c.Component = (*ComponentService)(&c.common)
+	c.Group = (*GroupService)(&c.common)
 
 	return c
 }
