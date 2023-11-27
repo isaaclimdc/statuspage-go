@@ -1,4 +1,4 @@
-package statuspage
+package statuspage_test
 
 import (
 	"context"
@@ -6,17 +6,19 @@ import (
 	"net/http"
 	"reflect"
 	"testing"
+
+	statuspage "github.com/nagelflorian/statuspage-go"
 )
 
 func TestComponent_marshall(t *testing.T) {
-	testJSONMarshal(t, &Component{}, "{}")
+	testJSONMarshal(t, &statuspage.Component{}, "{}")
 
-	u := &Component{
+	u := &statuspage.Component{
 		ID:                 String("a"),
 		PageID:             String("b"),
 		GroupID:            String("c"),
-		CreatedAt:          &Timestamp{referenceTime},
-		UpdatedAt:          &Timestamp{referenceTime},
+		CreatedAt:          &statuspage.Timestamp{referenceTime},
+		UpdatedAt:          &statuspage.Timestamp{referenceTime},
 		Group:              Bool(true),
 		Name:               String("d"),
 		Description:        String("e"),
@@ -58,7 +60,7 @@ func TestComponentService_GetComponent(t *testing.T) {
 		t.Errorf("ComponentService.GetComponent returned error: %v", err)
 	}
 
-	want := &Component{ID: String("2")}
+	want := &statuspage.Component{ID: String("2")}
 	if !reflect.DeepEqual(component, want) {
 		t.Errorf("ComponentService.GetComponent returned %+v, want %+v", component, want)
 	}
@@ -78,7 +80,7 @@ func TestComponentService_ListComponent(t *testing.T) {
 		t.Errorf("ComponentService.ListComponents returned error: %v", err)
 	}
 
-	want := &[]Component{
+	want := &[]statuspage.Component{
 		{ID: String("1")},
 		{ID: String("2")},
 	}
@@ -111,7 +113,7 @@ func TestComponentService_UpdateComponent(t *testing.T) {
 		fmt.Fprint(w, `{"id":"2", "status": "major_outage"}`)
 	})
 
-	componentParams := UpdateComponentParams{
+	componentParams := statuspage.UpdateComponentParams{
 		Status: "major_outage",
 	}
 	updatedComponent, err := client.Component.UpdateComponent(context.Background(), "1", "2", componentParams)
@@ -119,7 +121,7 @@ func TestComponentService_UpdateComponent(t *testing.T) {
 		t.Errorf("ComponentService.UpdateComponent returned error: %v", err)
 	}
 
-	want := &Component{ID: String("2"), Status: String("major_outage")}
+	want := &statuspage.Component{ID: String("2"), Status: String("major_outage")}
 	if !reflect.DeepEqual(updatedComponent, want) {
 		t.Errorf("ComponentService.UpdateComponent returned %+v, want %+v", updatedComponent, want)
 	}

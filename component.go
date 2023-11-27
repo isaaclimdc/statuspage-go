@@ -47,7 +47,7 @@ func (s *ComponentService) GetComponent(ctx context.Context, pageID string, comp
 }
 
 // ListComponents returns a list of all components for a given page id
-func (s *ComponentService) ListComponents(ctx context.Context, pageID string) (*[]Component, error) {
+func (s *ComponentService) ListComponents(ctx context.Context, pageID string) ([]Component, error) {
 	path := "v1/pages/" + pageID + "/components"
 	req, err := s.client.newRequest("GET", path, nil)
 	if err != nil {
@@ -57,7 +57,7 @@ func (s *ComponentService) ListComponents(ctx context.Context, pageID string) (*
 	var components []Component
 	_, err = s.client.do(ctx, req, &components)
 
-	return &components, err
+	return components, err
 }
 
 // DeleteComponent deletes a component for a given page and component id

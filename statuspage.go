@@ -125,3 +125,25 @@ func NewClient(token string, httpClient *http.Client) *Client {
 
 	return c
 }
+
+func (c *Client) GetComponentsFromGroup(ctx context.Context, pageID, groupID string) ([]Component, error){
+
+	components := make([]Component, 0)
+
+	group, err := c.Group.GetGroup(ctx, pageID, groupID)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, comp := range group.Components {
+
+		component, err := c.Component.GetComponent(ctx, pageID, comp)
+		if err != nil {
+			return nil, err
+		}
+
+		components = append(components, *component)
+	}
+
+	return components,nil
+}

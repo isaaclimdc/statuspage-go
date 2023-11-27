@@ -1,4 +1,4 @@
-package statuspage
+package statuspage_test
 
 import (
 	"context"
@@ -7,15 +7,17 @@ import (
 	"net/http"
 	"reflect"
 	"testing"
+
+	statuspage "github.com/nagelflorian/statuspage-go"
 )
 
 func TestPage_marshall(t *testing.T) {
-	testJSONMarshal(t, &Page{}, "{}")
+	testJSONMarshal(t, &statuspage.Page{}, "{}")
 
-	u := &Page{
+	u := &statuspage.Page{
 		ID:                       String("a"),
-		CreatedAt:                &Timestamp{referenceTime},
-		UpdatedAt:                &Timestamp{referenceTime},
+		CreatedAt:                &statuspage.Timestamp{referenceTime},
+		UpdatedAt:                &statuspage.Timestamp{referenceTime},
 		Name:                     String("b"),
 		PageDescription:          String("c"),
 		Headline:                 String("d"),
@@ -52,28 +54,28 @@ func TestPage_marshall(t *testing.T) {
 		CSSBorderColor:           String("z"),
 		CSSGraphColor:            String("aa"),
 		CSSLinkColor:             String("ab"),
-		FaviconLogo: &PageLogo{
-			UpdatedAt: &Timestamp{referenceTime},
+		FaviconLogo: &statuspage.PageLogo{
+			UpdatedAt: &statuspage.Timestamp{referenceTime},
 			Size:      Int64(2),
 			URL:       String("ac"),
 		},
-		TransactionalLogo: &PageLogo{
-			UpdatedAt: &Timestamp{referenceTime},
+		TransactionalLogo: &statuspage.PageLogo{
+			UpdatedAt: &statuspage.Timestamp{referenceTime},
 			Size:      Int64(2),
 			URL:       String("ad"),
 		},
-		HeroCover: &PageLogo{
-			UpdatedAt: &Timestamp{referenceTime},
+		HeroCover: &statuspage.PageLogo{
+			UpdatedAt: &statuspage.Timestamp{referenceTime},
 			Size:      Int64(2),
 			URL:       String("ae"),
 		},
-		EmailLogo: &PageLogo{
-			UpdatedAt: &Timestamp{referenceTime},
+		EmailLogo: &statuspage.PageLogo{
+			UpdatedAt: &statuspage.Timestamp{referenceTime},
 			Size:      Int64(2),
 			URL:       String("af"),
 		},
-		TwitterLogo: &PageLogo{
-			UpdatedAt: &Timestamp{referenceTime},
+		TwitterLogo: &statuspage.PageLogo{
+			UpdatedAt: &statuspage.Timestamp{referenceTime},
 			Size:      Int64(2),
 			URL:       String("ag"),
 		},
@@ -163,7 +165,7 @@ func TestPageService_GetPage(t *testing.T) {
 		t.Errorf("PageService.GetPage returned error: %v", err)
 	}
 
-	want := &Page{ID: String("1")}
+	want := &statuspage.Page{ID: String("1")}
 	if !reflect.DeepEqual(page, want) {
 		t.Errorf("PageService.GetPage returned %+v, want %+v", page, want)
 	}
@@ -183,7 +185,7 @@ func TestPageService_ListPages(t *testing.T) {
 		t.Errorf("PageService.ListPages returned error: %v", err)
 	}
 
-	want := &[]Page{
+	want := &[]statuspage.Page{
 		{ID: String("1")},
 		{ID: String("2")},
 	}
@@ -196,7 +198,7 @@ func TestPageService_UpdatePage(t *testing.T) {
 	client, mux, _, teardown := setup()
 	defer teardown()
 
-	input := UpdatePageParams{
+	input := statuspage.UpdatePageParams{
 		Name:                     "a",
 		HiddenFromSearch:         Bool(false),
 		ViewersMustBeTeamMembers: Bool(true),
@@ -205,7 +207,7 @@ func TestPageService_UpdatePage(t *testing.T) {
 	mux.HandleFunc("/v1/pages/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
 
-		v := &UpdatePageRequestBody{}
+		v := &statuspage.UpdatePageRequestBody{}
 		json.NewDecoder(r.Body).Decode(v)
 		if !reflect.DeepEqual(v.Page, input) {
 			t.Errorf("Request body = %+v, want %+v", v, input)
@@ -219,7 +221,7 @@ func TestPageService_UpdatePage(t *testing.T) {
 		t.Errorf("PageService.UpdatePage returned error: %v", err)
 	}
 
-	want := &Page{
+	want := &statuspage.Page{
 		ID: String("1"),
 	}
 	if !reflect.DeepEqual(page, want) {

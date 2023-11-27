@@ -1,8 +1,10 @@
-package statuspage
+package statuspage_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -11,9 +13,14 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	statuspage "github.com/nagelflorian/statuspage-go"
 )
 
 var referenceTime = time.Date(2006, time.January, 02, 15, 04, 05, 0, time.UTC)
+
+var integration = flag.Bool("integration", false, "enable integration testing")
+var offline = flag.Bool("offline", true, "run offline tests")
 
 const (
 	// baseURLPath is a non-empty Client.BaseURL path to use during tests,
@@ -24,7 +31,7 @@ const (
 // setup sets up a test HTTP server along with a statuspage.Client that is
 // configured to talk to that test server. Tests should register handlers on
 // mux which provide mock responses for the API method being tested.
-func setup() (client *Client, mux *http.ServeMux, serverURL string, teardown func()) {
+func setup() (client *statuspage.Client, mux *http.ServeMux, serverURL string, teardown func()) {
 	// mux is the HTTP request multiplexer used with the test server.
 	mux = http.NewServeMux()
 
@@ -40,7 +47,7 @@ func setup() (client *Client, mux *http.ServeMux, serverURL string, teardown fun
 
 	// client is the Statuspage client being tested and is
 	// configured to use test server.
-	client = NewClient("test-token", nil)
+	client = statuspage.NewClient("test-token", nil)
 	url, _ := url.Parse(server.URL + baseURLPath + "/")
 	client.BaseURL = url
 
@@ -100,3 +107,34 @@ func Int64(v int64) *int64 { return &v }
 // String is a helper routine that allocates a new string value
 // to store v and returns a pointer to it.
 func String(v string) *string { return &v }
+
+func TestIntegration(t *testing.T) {
+	if (*integration) {
+		t.Log("INTEGRATION")
+
+		token := os.Getenv("STATUSPAGE_API_TOKEN")
+
+		client := statuspage.NewClient(token, nil)
+
+		groups, err := client.Group.GetGroups(context.TODO(), "83bfylw1fg7v")
+		if err != nil {
+			t.Error(err)
+		}
+		
+		t.Logf("groups: %d: %s", len(groups), *groups[0].ID)
+
+		pGroup, err := client.Group.GetGroup(context.TODO(), "83bfylw1fg7v", *groups[0].ID)
+		if err != nil {
+			t.Error(err)
+		}
+
+		t.Logf("Components: %d: %s", len(pGroup.Components), pGroup.Components[0])
+
+		components, err := client.GetComponentsFromGroup(context.TODO(), "83bfylw1fg7v", *groups[0].ID)
+		if err != nil {
+			t.Error(err)
+		}
+
+		t.Logf("Components: %d", len(components))
+	}
+}

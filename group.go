@@ -33,7 +33,7 @@ func (s *GroupService) GetGroup(ctx context.Context, pageID string, groupID stri
 }
 
 // ListComponents returns a list of all components for a given page id
-func (s *GroupService) GetGroups(ctx context.Context, pageID string) (*[]Group, error) {
+func (s *GroupService) GetGroups(ctx context.Context, pageID string) ([]Group, error) {
 	path := "v1/pages/" + pageID + "/component-groups"
 	req, err := s.client.newRequest("GET", path, nil)
 	if err != nil {
@@ -43,5 +43,5 @@ func (s *GroupService) GetGroups(ctx context.Context, pageID string) (*[]Group, 
 	var groups []Group
 	_, err = s.client.do(ctx, req, &groups)
 
-	return &groups, err
+	return groups, err
 }
