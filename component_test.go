@@ -4,12 +4,29 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"reflect"
 	"testing"
 
 	statuspage "github.com/andrewwatson/statuspage-go"
 )
 
+func TestGetComponent(t *testing.T) {
+
+	if *integration {
+		token := os.Getenv("STATUSPAGE_API_TOKEN")
+		page := os.Getenv(("STATUSPAGE_API_PAGE"))
+		client := statuspage.NewClient(token, nil)
+
+		component, err := client.Component.GetComponent(context.TODO(), page, "qw1nh8v4gxsv")
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		t.Logf("Component Name: %s", *component.Name)
+	}
+
+}
 func TestComponent_marshall(t *testing.T) {
 	testJSONMarshal(t, &statuspage.Component{}, "{}")
 

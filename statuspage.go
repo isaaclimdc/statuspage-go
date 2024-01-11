@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -30,6 +29,7 @@ type Client struct {
 	Page      *PageService
 	Component *ComponentService
 	Group     *GroupService
+	Incident  *IncidentService
 }
 
 type service struct {
@@ -41,6 +41,7 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 	u := c.BaseURL.ResolveReference(rel)
 	var buf io.ReadWriter
 	if body != nil {
+
 		buf = new(bytes.Buffer)
 		err := json.NewEncoder(buf).Encode(body)
 		if err != nil {
@@ -94,7 +95,8 @@ func (c *Client) do(ctx context.Context, req *http.Request, v interface{}) (*htt
 		return resp, err
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %s", err)
 	}
@@ -122,11 +124,12 @@ func NewClient(token string, httpClient *http.Client) *Client {
 	c.Page = (*PageService)(&c.common)
 	c.Component = (*ComponentService)(&c.common)
 	c.Group = (*GroupService)(&c.common)
+	c.Incident = (*IncidentService)(&c.common)
 
 	return c
 }
 
-func (c *Client) GetComponentsFromGroup(ctx context.Context, pageID, groupID string) ([]Component, error){
+func (c *Client) GetComponentsFromGroup(ctx context.Context, pageID, groupID string) ([]Component, error) {
 
 	components := make([]Component, 0)
 
@@ -145,5 +148,5 @@ func (c *Client) GetComponentsFromGroup(ctx context.Context, pageID, groupID str
 		components = append(components, *component)
 	}
 
-	return components,nil
+	return components, nil
 }

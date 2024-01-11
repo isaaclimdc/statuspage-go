@@ -20,6 +20,7 @@ import (
 var referenceTime = time.Date(2006, time.January, 02, 15, 04, 05, 0, time.UTC)
 
 var integration = flag.Bool("integration", false, "enable integration testing")
+
 // var offline = flag.Bool("offline", true, "run offline tests")
 
 const (
@@ -109,28 +110,32 @@ func Int64(v int64) *int64 { return &v }
 func String(v string) *string { return &v }
 
 func TestIntegration(t *testing.T) {
-	if (*integration) {
+	if *integration {
 		t.Log("INTEGRATION")
 
 		token := os.Getenv("STATUSPAGE_API_TOKEN")
 
+		page := os.Getenv(("STATUSPAGE_API_PAGE"))
+
 		client := statuspage.NewClient(token, nil)
 
-		groups, err := client.Group.GetGroups(context.TODO(), "83bfylw1fg7v")
+		groups, err := client.Group.GetGroups(context.TODO(), page)
 		if err != nil {
 			t.Error(err)
+			t.Fail()
+			return
 		}
-		
+
 		t.Logf("groups: %d: %s", len(groups), *groups[0].ID)
 
-		pGroup, err := client.Group.GetGroup(context.TODO(), "83bfylw1fg7v", *groups[0].ID)
+		pGroup, err := client.Group.GetGroup(context.TODO(), page, *groups[0].ID)
 		if err != nil {
 			t.Error(err)
 		}
 
 		t.Logf("Components: %d: %s", len(pGroup.Components), pGroup.Components[0])
 
-		components, err := client.GetComponentsFromGroup(context.TODO(), "83bfylw1fg7v", *groups[0].ID)
+		components, err := client.GetComponentsFromGroup(context.TODO(), page, *groups[0].ID)
 		if err != nil {
 			t.Error(err)
 		}
