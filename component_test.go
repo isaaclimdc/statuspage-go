@@ -97,7 +97,7 @@ func TestComponentService_ListComponent(t *testing.T) {
 		t.Errorf("ComponentService.ListComponents returned error: %v", err)
 	}
 
-	want := &[]statuspage.Component{
+	want := []statuspage.Component{
 		{ID: String("1")},
 		{ID: String("2")},
 	}
