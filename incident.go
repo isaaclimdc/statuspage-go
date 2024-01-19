@@ -25,6 +25,10 @@ type Incident struct {
 // CreateIncident creates a new incident
 func (s *IncidentService) CreateIncident(ctx context.Context, pageID string, incident Incident) (*Incident, error) {
 
+	if (pageID == "") {
+		pageID = s.client.defaultPage
+	}
+	
 	path := "v1/pages/" + pageID + "/incidents/"
 	requestBody := UpdateIncidentRequestBody{incident}
 

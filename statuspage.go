@@ -23,6 +23,8 @@ type Client struct {
 	Token     string
 	Version   string
 
+	defaultPage string 
+
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// Services used for talking to different parts of the Statuspage API.
@@ -34,6 +36,10 @@ type Client struct {
 
 type service struct {
 	client *Client
+}
+
+func (c *Client) SetDefaultPage(page string) {
+	c.defaultPage = page 
 }
 
 func (c *Client) newRequest(method, path string, body interface{}) (*http.Request, error) {
