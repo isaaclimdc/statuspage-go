@@ -23,8 +23,8 @@ func TestGetIncident(t *testing.T) {
 			t.Fail()
 		}
 
-		t.Logf("Name: %s", *incident.Name)
-		t.Logf("Component: %s", *incident.Components[0].Name)
+		t.Logf("Name: %s", incident.Name)
+		t.Logf("Component: %s", incident.Components[0].Name)
 
 	}
 }
@@ -44,11 +44,11 @@ func TestCreateIncident(t *testing.T) {
 		body := "There is something going on.  We'll figure it out eventually."
 
 		incident := statuspage.Incident{
-			PageID:       &page,
-			Name:         &name,
-			Body:         &body,
+			PageID:       page,
+			Name:         name,
+			Body:         body,
 			ComponentIDs: components,
-			Status:       &status,
+			Status:       status,
 		}
 
 		_, err := client.Incident.CreateIncident(context.TODO(), page, incident)

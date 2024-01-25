@@ -11,13 +11,13 @@ const (
 type IncidentService service
 
 type Incident struct {
-	ID           *string     `json:"id,omitempty"`
-	PageID       *string     `json:"page_id,omitempty"`
-	CreatedAt    *Timestamp  `json:"created_at,omitempty"`
-	UpdatedAt    *Timestamp  `json:"updated_at,omitempty"`
-	Name         *string     `json:"name,omitempty"`
-	Body         *string     `json:"body"`
-	Status       *string     `json:"status,omitempty"`
+	ID           string      `json:"id,omitempty"`
+	PageID       string      `json:"page_id,omitempty"`
+	CreatedAt    Timestamp   `json:"created_at,omitempty"`
+	UpdatedAt    Timestamp   `json:"updated_at,omitempty"`
+	Name         string      `json:"name,omitempty"`
+	Body         string      `json:"body"`
+	Status       string      `json:"status,omitempty"`
 	Components   []Component `json:"components,omitempty"`
 	ComponentIDs []string    `json:"component_ids,omitempty"`
 }
@@ -25,10 +25,10 @@ type Incident struct {
 // CreateIncident creates a new incident
 func (s *IncidentService) CreateIncident(ctx context.Context, pageID string, incident Incident) (*Incident, error) {
 
-	if (pageID == "") {
+	if pageID == "" {
 		pageID = s.client.defaultPage
 	}
-	
+
 	path := "v1/pages/" + pageID + "/incidents/"
 	requestBody := UpdateIncidentRequestBody{incident}
 

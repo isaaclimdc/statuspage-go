@@ -7,14 +7,15 @@ import (
 type GroupService service
 
 type Group struct {
-	ID          *string    `json:"id,omitempty"`
-	PageID      *string    `json:"page_id,omitempty"`
-	CreatedAt   *Timestamp `json:"created_at,omitempty"`
-	UpdatedAt   *Timestamp `json:"updated_at,omitempty"`
-	Name        *string    `json:"name,omitempty"`
-	Description *string    `json:"description,omitempty"`
-	Position    *int32     `json:"position,omitempty"`
-	Components  []string   `json:"components,omitempty"`
+	ID             string      `json:"id,omitempty"`
+	PageID         string      `json:"page_id,omitempty"`
+	CreatedAt      Timestamp   `json:"created_at,omitempty"`
+	UpdatedAt      Timestamp   `json:"updated_at,omitempty"`
+	Name           string      `json:"name,omitempty"`
+	Description    string      `json:"description,omitempty"`
+	Position       int32       `json:"position,omitempty"`
+	Components     []string    `json:"components,omitempty"`
+	FullComponents []Component `json:"fullComponents,omitempty"`
 }
 
 // GetGroup returns component group information for a given page and component group id

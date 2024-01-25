@@ -12,19 +12,19 @@ type ComponentService service
 
 // Component is the Statuspage API component representation
 type Component struct {
-	ID                 *string    `json:"id,omitempty"`
-	PageID             *string    `json:"page_id,omitempty"`
-	GroupID            *string    `json:"group_id,omitempty"`
-	CreatedAt          *Timestamp `json:"created_at,omitempty"`
-	UpdatedAt          *Timestamp `json:"updated_at,omitempty"`
-	Group              *bool      `json:"group,omitempty"`
-	Name               *string    `json:"name,omitempty"`
-	Description        *string    `json:"description,omitempty"`
-	Position           *int32     `json:"position,omitempty"`
-	Status             *string    `json:"status,omitempty"`
-	Showcase           *bool      `json:"showcase,omitempty"`
-	OnlyShowIfDegraded *bool      `json:"only_show_if_degraded,omitempty"`
-	AutomationEmail    *string    `json:"automation_email,omitempty"`
+	ID                 string    `json:"id,omitempty"`
+	PageID             string    `json:"page_id,omitempty"`
+	GroupID            string    `json:"group_id,omitempty"`
+	CreatedAt          Timestamp `json:"created_at,omitempty"`
+	UpdatedAt          Timestamp `json:"updated_at,omitempty"`
+	Group              bool      `json:"group,omitempty"`
+	Name               string    `json:"name,omitempty"`
+	Description        string    `json:"description,omitempty"`
+	Position           int32     `json:"position,omitempty"`
+	Status             string    `json:"status,omitempty"`
+	Showcase           bool      `json:"showcase,omitempty"`
+	OnlyShowIfDegraded bool      `json:"only_show_if_degraded,omitempty"`
+	AutomationEmail    string    `json:"automation_email,omitempty"`
 }
 
 func (c Component) String() string {

@@ -109,6 +109,25 @@ func Int64(v int64) *int64 { return &v }
 // to store v and returns a pointer to it.
 func String(v string) *string { return &v }
 
+func TestGetGroups(t *testing.T) {
+	if *integration {
+		t.Log("INTEGRATION")
+
+		token := os.Getenv("STATUSPAGE_API_TOKEN")
+		page := os.Getenv(("STATUSPAGE_API_PAGE"))
+		client := statuspage.NewClient(token, nil)
+
+		groups, err := client.GetAllGroupsAndComponents(context.TODO(), page)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if len(groups) < 1 {
+			t.Fail()
+		}
+	}
+
+}
 func TestIntegration(t *testing.T) {
 	if *integration {
 		t.Log("INTEGRATION")
@@ -126,16 +145,16 @@ func TestIntegration(t *testing.T) {
 			return
 		}
 
-		t.Logf("groups: %d: %s", len(groups), *groups[0].ID)
+		t.Logf("groups: %d: %s", len(groups), groups[0].ID)
 
-		pGroup, err := client.Group.GetGroup(context.TODO(), page, *groups[0].ID)
+		pGroup, err := client.Group.GetGroup(context.TODO(), page, groups[0].ID)
 		if err != nil {
 			t.Error(err)
 		}
 
 		t.Logf("Components: %d: %s", len(pGroup.Components), pGroup.Components[0])
 
-		components, err := client.GetComponentsFromGroup(context.TODO(), page, *groups[0].ID)
+		components, err := client.GetComponentsFromGroup(context.TODO(), page, groups[0].ID)
 		if err != nil {
 			t.Error(err)
 		}

@@ -23,7 +23,7 @@ type Client struct {
 	Token     string
 	Version   string
 
-	defaultPage string 
+	defaultPage string
 
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
@@ -39,7 +39,7 @@ type service struct {
 }
 
 func (c *Client) SetDefaultPage(page string) {
-	c.defaultPage = page 
+	c.defaultPage = page
 }
 
 func (c *Client) newRequest(method, path string, body interface{}) (*http.Request, error) {
@@ -133,6 +133,37 @@ func NewClient(token string, httpClient *http.Client) *Client {
 	c.Incident = (*IncidentService)(&c.common)
 
 	return c
+}
+
+func (c *Client) GetAllGroupsAndComponents(ctx context.Context, pageID string) (map[string]Group, error) {
+
+	groupMap := make(map[string]Group, 0)
+
+	groups, err := c.Group.GetGroups(ctx, pageID)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, g := range groups {
+		groupMap[g.ID] = g
+	}
+
+	components, err := c.Component.ListComponents(ctx, pageID)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, c := range components {
+
+		g := c.GroupID
+		if g, ok := groupMap[g]; ok {
+			g.FullComponents = append(g.FullComponents, c)
+			groupMap[c.GroupID] = g
+		}
+
+	}
+
+	return groupMap, nil
 }
 
 func (c *Client) GetComponentsFromGroup(ctx context.Context, pageID, groupID string) ([]Component, error) {
