@@ -83,6 +83,10 @@ type UpdateIncidentRequestBody struct {
 // UpdateIncident updates a component for a given page and component id
 func (s *IncidentService) UpdateIncident(ctx context.Context, pageID string, incident Incident) (*Incident, error) {
 
+	if pageID == "" {
+		pageID = s.client.defaultPage
+	}
+	
 	path := "v1/pages/" + pageID + "/incidents/" + incident.ID
 	payload := UpdateIncidentRequestBody{Incident: incident}
 	req, err := s.client.newRequest("PATCH", path, payload)
