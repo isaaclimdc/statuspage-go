@@ -6,6 +6,10 @@ import (
 
 const (
 	StatusInvestigating = "investigating"
+	StatusIdentified = "identified"
+	StatusMonitoring = "monitoring"
+	StatusResolved = "resolved"
+
 )
 
 type IncidentService service
