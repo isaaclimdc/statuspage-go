@@ -6,24 +6,24 @@ import (
 
 const (
 	StatusInvestigating = "investigating"
-	StatusIdentified = "identified"
-	StatusMonitoring = "monitoring"
-	StatusResolved = "resolved"
-
+	StatusIdentified    = "identified"
+	StatusMonitoring    = "monitoring"
+	StatusResolved      = "resolved"
 )
 
 type IncidentService service
 
 type Incident struct {
-	ID           string      `json:"id,omitempty"`
-	PageID       string      `json:"page_id,omitempty"`
-	CreatedAt    Timestamp   `json:"created_at,omitempty"`
-	UpdatedAt    Timestamp   `json:"updated_at,omitempty"`
-	Name         string      `json:"name,omitempty"`
-	Body         string      `json:"body"`
-	Status       string      `json:"status,omitempty"`
-	Components   []Component `json:"components,omitempty"`
-	ComponentIDs []string    `json:"component_ids,omitempty"`
+	ID                   string      `json:"id,omitempty"`
+	PageID               string      `json:"page_id,omitempty"`
+	CreatedAt            Timestamp   `json:"created_at,omitempty"`
+	UpdatedAt            Timestamp   `json:"updated_at,omitempty"`
+	Name                 string      `json:"name,omitempty"`
+	Body                 string      `json:"body"`
+	Status               string      `json:"status,omitempty"`
+	Components           []Component `json:"components,omitempty"`
+	ComponentIDs         []string    `json:"component_ids,omitempty"`
+	DeliverNotifications bool        `json:"deliver_notifications,omitempty"`
 }
 
 // CreateIncident creates a new incident
@@ -81,8 +81,9 @@ type UpdateIncidentRequestBody struct {
 }
 
 // UpdateIncident updates a component for a given page and component id
-func (s *IncidentService) UpdateIncident(ctx context.Context, pageID string, incidentID string, incident Incident) (*Incident, error) {
-	path := "v1/pages/" + pageID + "/incidents/" + incidentID
+func (s *IncidentService) UpdateIncident(ctx context.Context, pageID string, incident Incident) (*Incident, error) {
+
+	path := "v1/pages/" + pageID + "/incidents/" + incident.ID
 	payload := UpdateIncidentRequestBody{Incident: incident}
 	req, err := s.client.newRequest("PATCH", path, payload)
 	if err != nil {
