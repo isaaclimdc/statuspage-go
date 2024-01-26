@@ -109,6 +109,49 @@ func Int64(v int64) *int64 { return &v }
 // to store v and returns a pointer to it.
 func String(v string) *string { return &v }
 
+func TestUpdateIncident(t *testing.T) {
+	if *integration {
+		t.Log("INTEGRATION")
+
+		token := os.Getenv("STATUSPAGE_API_TOKEN")
+		page := os.Getenv(("STATUSPAGE_API_PAGE"))
+		client := statuspage.NewClient(token, nil)
+
+		incident := statuspage.Incident{
+			Name:                 "Name",
+			Body:                 "Something is broken",
+			DeliverNotifications: false,
+			Status:               statuspage.StatusIdentified,
+			ComponentIDs: []string{"qw1nh8v4gxsv"},
+		}
+
+		result, err := client.Incident.CreateIncident(context.TODO(), page, incident)
+		if err != nil {
+			t.Errorf("Create Incident %s", err.Error())			
+			return
+		}
+
+		updatedIncident := statuspage.Incident{
+			ID: result.ID,
+			Name:                 "Name",
+			Body:                 "Issue has been resolved",
+			DeliverNotifications: false,
+			Status:               statuspage.StatusResolved,
+			ComponentIDs: []string{"qw1nh8v4gxsv"},
+
+		}
+		
+		byteme, err := json.Marshal(updatedIncident)
+		fmt.Printf("%s", string(byteme))
+		
+		_, err = client.Incident.UpdateIncident(context.TODO(), page, updatedIncident)
+		if err != nil {
+			t.Errorf("Update Incident %s", err.Error())
+			return
+		}
+	}
+}
+
 func TestGetGroups(t *testing.T) {
 	if *integration {
 		t.Log("INTEGRATION")

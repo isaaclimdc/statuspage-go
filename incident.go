@@ -86,10 +86,10 @@ func (s *IncidentService) UpdateIncident(ctx context.Context, pageID string, inc
 	if pageID == "" {
 		pageID = s.client.defaultPage
 	}
-	
+
 	path := "v1/pages/" + pageID + "/incidents/" + incident.ID
 	payload := UpdateIncidentRequestBody{Incident: incident}
-	req, err := s.client.newRequest("PATCH", path, payload)
+	req, err := s.client.newRequest("PUT", path, payload)
 	if err != nil {
 		return nil, err
 	}
