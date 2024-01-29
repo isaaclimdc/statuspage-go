@@ -118,9 +118,9 @@ func TestUpdateIncident(t *testing.T) {
 		client := statuspage.NewClient(token, nil)
 
 		incident := statuspage.Incident{
-			Name:                 "Name",
+			Name:                 "Integration Test",
 			Body:                 "Something is broken",
-			DeliverNotifications: false,
+			DeliverNotifications: true,
 			Status:               statuspage.StatusIdentified,
 			ComponentIDs: []string{"qw1nh8v4gxsv"},
 		}
@@ -133,17 +133,16 @@ func TestUpdateIncident(t *testing.T) {
 
 		updatedIncident := statuspage.Incident{
 			ID: result.ID,
-			Name:                 "Name",
+			Name:                 incident.Name,
 			Body:                 "Issue has been resolved",
 			DeliverNotifications: false,
 			Status:               statuspage.StatusResolved,
 			ComponentIDs: []string{"qw1nh8v4gxsv"},
 
 		}
-		
-		byteme, err := json.Marshal(updatedIncident)
-		fmt.Printf("%s", string(byteme))
-		
+
+		time.Sleep(10 * time.Second)
+
 		_, err = client.Incident.UpdateIncident(context.TODO(), page, updatedIncident)
 		if err != nil {
 			t.Errorf("Update Incident %s", err.Error())

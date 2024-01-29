@@ -23,7 +23,7 @@ type Incident struct {
 	Status               string      `json:"status,omitempty"`
 	Components           []Component `json:"components,omitempty"`
 	ComponentIDs         []string    `json:"component_ids,omitempty"`
-	DeliverNotifications bool        `json:"deliver_notifications,omitempty"`
+	DeliverNotifications bool        `json:"deliver_notifications"`
 }
 
 // CreateIncident creates a new incident
