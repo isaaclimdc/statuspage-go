@@ -51,10 +51,10 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 		buf = new(bytes.Buffer)
 		err := json.NewEncoder(buf).Encode(body)
 
-		buf2 := new(bytes.Buffer)
-		json.NewEncoder(buf2).Encode(body)
+		// buf2 := new(bytes.Buffer)
+		// json.NewEncoder(buf2).Encode(body)
 
-		fmt.Printf("REQ: %s", buf2.String())
+		// fmt.Printf("REQ: %s", buf2.String())
 		if err != nil {
 			return nil, err
 		}
