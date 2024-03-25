@@ -42,15 +42,16 @@ type Incident struct {
 }
 
 type IncidentUpdate struct {
-	ID           string            `json:"id,omitempty"`
-	PageID       string            `json:"page_id,omitempty"`
-	CreatedAt    Timestamp         `json:"created_at,omitempty"`
-	UpdatedAt    Timestamp         `json:"updated_at,omitempty"`
-	Name         string            `json:"name,omitempty"`
-	Body         string            `json:"body"`
-	Status       string            `json:"status,omitempty"`
-	Components   map[string]string `json:"components,omitempty"`
-	ComponentIDs []string          `json:"component_ids,omitempty"`
+	ID                   string            `json:"id,omitempty"`
+	PageID               string            `json:"page_id,omitempty"`
+	CreatedAt            Timestamp         `json:"created_at,omitempty"`
+	UpdatedAt            Timestamp         `json:"updated_at,omitempty"`
+	Name                 string            `json:"name,omitempty"`
+	Body                 string            `json:"body"`
+	Status               string            `json:"status,omitempty"`
+	Components           map[string]string `json:"components,omitempty"`
+	ComponentIDs         []string          `json:"component_ids,omitempty"`
+	DeliverNotifications bool              `json:"deliver_notifications"`
 }
 
 // CreateIncident creates a new incident
@@ -67,12 +68,13 @@ func (s *IncidentService) CreateIncident(ctx context.Context, pageID, status str
 	}
 
 	updateBody := IncidentUpdate{
-		ID:           incident.ID,
-		Name:         incident.Name,
-		Body:         incident.Body,
-		Components:   componentMap,
-		ComponentIDs: incident.ComponentIDs,
-		Status:       incident.Status,
+		ID:                   incident.ID,
+		Name:                 incident.Name,
+		Body:                 incident.Body,
+		Components:           componentMap,
+		ComponentIDs:         incident.ComponentIDs,
+		Status:               incident.Status,
+		DeliverNotifications: incident.DeliverNotifications,
 	}
 
 	path := "v1/pages/" + pageID + "/incidents/"
@@ -120,12 +122,13 @@ func (s *IncidentService) UpdateIncident(ctx context.Context, pageID, status str
 	}
 
 	updateBody := IncidentUpdate{
-		ID:           incident.ID,
-		Name:         incident.Name,
-		Body:         incident.Body,
-		Components:   componentMap,
-		ComponentIDs: incident.ComponentIDs,
-		Status:       incident.Status,
+		ID:                   incident.ID,
+		Name:                 incident.Name,
+		Body:                 incident.Body,
+		Components:           componentMap,
+		ComponentIDs:         incident.ComponentIDs,
+		Status:               incident.Status,
+		DeliverNotifications: incident.DeliverNotifications,
 	}
 
 	payload := UpdateIncidentRequestBody{Incident: updateBody}
