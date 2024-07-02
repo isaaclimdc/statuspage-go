@@ -93,6 +93,11 @@ func (s *IncidentService) CreateIncident(ctx context.Context, pageID, status str
 
 // GetGroup returns component group information for a given page and component group id
 func (s *IncidentService) GetIncident(ctx context.Context, pageID string, incidentID string) (*Incident, error) {
+
+	if pageID == "" {
+		pageID = s.client.defaultPage
+	}
+	
 	path := "v1/pages/" + pageID + "/incidents/" + incidentID
 	req, err := s.client.newRequest("GET", path, nil)
 
