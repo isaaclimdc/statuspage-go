@@ -90,6 +90,10 @@ type UpdateComponentRequestBody struct {
 
 // UpdateComponent updates a component for a given page and component id
 func (s *ComponentService) UpdateComponent(ctx context.Context, pageID string, componentID string, component UpdateComponentParams) (*Component, error) {
+	if pageID == "" {
+		pageID = s.client.defaultPage
+	}
+
 	path := "v1/pages/" + pageID + "/components/" + componentID
 	payload := UpdateComponentRequestBody{Component: component}
 	req, err := s.client.newRequest("PATCH", path, payload)
