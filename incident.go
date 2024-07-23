@@ -2,6 +2,7 @@ package statuspage
 
 import (
 	"context"
+	"fmt"
 )
 
 const (
@@ -97,7 +98,7 @@ func (s *IncidentService) GetIncident(ctx context.Context, pageID string, incide
 	if pageID == "" {
 		pageID = s.client.defaultPage
 	}
-	
+
 	path := "v1/pages/" + pageID + "/incidents/" + incidentID
 	req, err := s.client.newRequest("GET", path, nil)
 
@@ -124,7 +125,9 @@ func (s *IncidentService) UpdateIncident(ctx context.Context, pageID, status str
 
 	for _, c := range incident.Components {
 		componentMap[c.ID] = status
+		fmt.Printf("COMP %s STATUS %s\n", c.ID, status)
 	}
+
 
 	updateBody := IncidentUpdate{
 		ID:                   incident.ID,
