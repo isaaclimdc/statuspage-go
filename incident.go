@@ -158,7 +158,7 @@ func (s *IncidentService) UpdateIncidentComponentStatus(ctx context.Context, pag
 }
 
 // UpdateIncidentStatus updates the status of a given incident ID for a given page
-func (s *IncidentService) UpdateIncidentStatus(ctx context.Context, pageID, status string, incident Incident) (*Incident, error) {
+func (s *IncidentService) UpdateIncidentStatus(ctx context.Context, pageID, status string, body string, incident Incident) (*Incident, error) {
 
 	if pageID == "" {
 		pageID = s.client.defaultPage
@@ -174,7 +174,7 @@ func (s *IncidentService) UpdateIncidentStatus(ctx context.Context, pageID, stat
 	updateBody := IncidentUpdate{
 		ID:                   incident.ID,
 		Name:                 incident.Name,
-		Body:                 incident.Body,
+		Body:                 body,
 		Components:           componentMap,
 		ComponentIDs:         incident.ComponentIDs,
 		Status:               status,

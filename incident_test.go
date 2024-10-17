@@ -93,7 +93,7 @@ func TestUpdateIncidentStatus(t *testing.T) {
 
 		existing.Status = statuspage.StatusMonitoring
 		existing.Body = "THIS HAS BEEN MONITORED"
-		_, err = client.Incident.UpdateIncidentStatus(context.TODO(), page, statuspage.StatusIdentified, *existing)
+		_, err = client.Incident.UpdateIncidentStatus(context.TODO(), page, statuspage.StatusIdentified, "update", *existing)
 		if err != nil {
 			t.Error(err)
 		}
