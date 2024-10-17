@@ -148,6 +148,11 @@ func TestJSONEncodeIncident(t *testing.T) {
 		ComponentIDs:         components,
 		Status:               status,
 		DeliverNotifications: false,
+		Metadata: map[string]statuspage.IncidentMetadata{
+			"jira": {
+				Value: "value",
+			},
+		},
 	}
 
 	buf := new(bytes.Buffer)
