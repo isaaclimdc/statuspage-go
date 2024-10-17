@@ -171,6 +171,10 @@ func (s *IncidentService) UpdateIncidentStatus(ctx context.Context, pageID, stat
 		componentMap[c.ID] = c.Status
 	}
 
+	if body == "" {
+		body = incident.Body
+	}
+
 	updateBody := IncidentUpdate{
 		ID:                   incident.ID,
 		Name:                 incident.Name,
