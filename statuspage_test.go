@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	statuspage "github.com/andrewwatson/statuspage-go"
+	statuspage "github.com/isaaclimdc/statuspage-go"
 )
 
 var referenceTime = time.Date(2006, time.January, 02, 15, 04, 05, 0, time.UTC)

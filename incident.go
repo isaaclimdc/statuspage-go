@@ -112,8 +112,8 @@ func (s *IncidentService) GetIncident(ctx context.Context, pageID string, incide
 	return &incident, err
 }
 
-// UpdateIncident updates a component for a given page and component id
-func (s *IncidentService) UpdateIncident(ctx context.Context, pageID, status string, incident Incident) (*Incident, error) {
+// UpdateIncidentComponentStatus updates a component for a given page and component id
+func (s *IncidentService) UpdateIncidentComponentStatus(ctx context.Context, pageID, status string, incident Incident) (*Incident, error) {
 
 	if pageID == "" {
 		pageID = s.client.defaultPage
@@ -128,7 +128,6 @@ func (s *IncidentService) UpdateIncident(ctx context.Context, pageID, status str
 		fmt.Printf("COMP %s STATUS %s\n", c.ID, status)
 	}
 
-
 	updateBody := IncidentUpdate{
 		ID:                   incident.ID,
 		Name:                 incident.Name,
@@ -141,6 +140,43 @@ func (s *IncidentService) UpdateIncident(ctx context.Context, pageID, status str
 
 	payload := UpdateIncidentRequestBody{Incident: updateBody}
 	req, err := s.client.newRequest("PUT", path, payload)
+	if err != nil {
+		return nil, err
+	}
+
+	var updatedIncident Incident
+	_, err = s.client.do(ctx, req, &updatedIncident)
+
+	return &updatedIncident, err
+}
+
+// UpdateIncidentStatus updates the status of a given incident ID for a given page
+func (s *IncidentService) UpdateIncidentStatus(ctx context.Context, pageID, status string, incident Incident) (*Incident, error) {
+
+	if pageID == "" {
+		pageID = s.client.defaultPage
+	}
+
+	path := "v1/pages/" + pageID + "/incidents/" + incident.ID
+
+	componentMap := make(map[string]string, 0)
+	for _, c := range incident.Components {
+		componentMap[c.ID] = c.Status
+	}
+
+	updateBody := IncidentUpdate{
+		ID:                   incident.ID,
+		Name:                 incident.Name,
+		Body:                 incident.Body,
+		Components:           componentMap,
+		ComponentIDs:         incident.ComponentIDs,
+		Status:               status,
+		DeliverNotifications: incident.DeliverNotifications,
+	}
+
+	payload := UpdateIncidentRequestBody{Incident: updateBody}
+	req, err := s.client.newRequest("PUT", path, payload)
+
 	if err != nil {
 		return nil, err
 	}

@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	statuspage "github.com/andrewwatson/statuspage-go"
+	statuspage "github.com/isaaclimdc/statuspage-go"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -49,14 +49,14 @@ func TestClearIncident(t *testing.T) {
 		existing.Body = "THIS HAS BEEN CLEARED"
 		existing.DeliverNotifications = false
 
-		_, err = client.Incident.UpdateIncident(context.TODO(), page, statuspage.StatusOperational, *existing)
+		_, err = client.Incident.UpdateIncidentComponentStatus(context.TODO(), page, statuspage.StatusOperational, *existing)
 		if err != nil {
 			t.Error(err)
 		}
 
 	}
 }
-func TestUpdateIncident(t *testing.T) {
+func TestUpdateIncidentComponentStatus(t *testing.T) {
 	if *integration {
 		token := os.Getenv("STATUSPAGE_API_TOKEN")
 		page := os.Getenv(("STATUSPAGE_API_PAGE"))
@@ -71,7 +71,29 @@ func TestUpdateIncident(t *testing.T) {
 
 		existing.Status = statuspage.StatusMonitoring
 		existing.Body = "THIS HAS BEEN MONITORED"
-		_, err = client.Incident.UpdateIncident(context.TODO(), page, statuspage.StatusMajorOutage, *existing)
+		_, err = client.Incident.UpdateIncidentComponentStatus(context.TODO(), page, statuspage.StatusMajorOutage, *existing)
+		if err != nil {
+			t.Error(err)
+		}
+
+	}
+}
+func TestUpdateIncidentStatus(t *testing.T) {
+	if *integration {
+		token := os.Getenv("STATUSPAGE_API_TOKEN")
+		page := os.Getenv(("STATUSPAGE_API_PAGE"))
+		client := statuspage.NewClient(token, nil)
+
+		existing, err := client.Incident.GetIncident(context.TODO(), page, *incidentID)
+		if err != nil {
+			t.Error(err)
+		}
+
+		t.Logf("Status %s", existing.Status)
+
+		existing.Status = statuspage.StatusMonitoring
+		existing.Body = "THIS HAS BEEN MONITORED"
+		_, err = client.Incident.UpdateIncidentStatus(context.TODO(), page, statuspage.StatusIdentified, *existing)
 		if err != nil {
 			t.Error(err)
 		}

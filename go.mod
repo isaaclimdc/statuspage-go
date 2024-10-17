@@ -1,4 +1,4 @@
-module github.com/andrewwatson/statuspage-go
+module github.com/isaaclimdc/statuspage-go
 
 go 1.12
 
